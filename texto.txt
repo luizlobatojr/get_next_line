@@ -1,10 +1,3 @@
-01 Lorem ipsum dolor sit amet, consectetur adipiscing.
-02 Etiam eget ligula eu lectus lobortis condimentum.
-03 Aliquam nonummy auctor massa.
-04 Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-05 Nulla at risus. Quisque purus magna, auctor et, sagittis ac, posuere eu, lectus.
-06 Nam mattis, felis ut adipiscing.
-07 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-08 Etiamget_next_line(int fd) eget ligula eu lectus lobortis condimentum.
-09 Aliquam nonummy auctor massa.
-10 Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+Primeira linha
+Segunda linha
+Terceira linha

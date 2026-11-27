@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lubatist <lubatist@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/27 12:00:51 by lubatist          #+#    #+#             */
+/*   Updated: 2026/11/27 12:23:08 by lubatist         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+static size_t	str_len(const char *s)
 {
 	size_t	i;
 
@@ -27,52 +39,46 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_substr(const char *s, size_t start, size_t len)
+char	*dup_substr(const char *s, size_t start, size_t len)
 {
-	char	*sub;
+	char	*out;
 	size_t	i;
 
-	sub = malloc(len + 1);
-	if (!sub)
+	out = malloc(len + 1);
+	if (!out)
 		return (NULL);
 	i = 0;
-	while (i < len && s[start + i])
+	while (i < len)
 	{
-		sub[i] = s[start + i];
+		out[i] = s[start + i];
 		i++;
 	}
-	sub[i] = '\0';
-	return (sub);
+	out[i] = '\0';
+	return (out);
 }
 
-char	*ft_strjoin_free(char *s1, const char *s2)
+char	*join_and_free(char *stash, const char *buf)
 {
-	char	*joined;
+	char	*out;
 	size_t	len1;
 	size_t	len2;
 	size_t	i;
+	size_t	j;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	joined = malloc(len1 + len2 + 1);
-	if (!joined)
-	{
-		free(s1);
-		return (NULL);
-	}
+	len1 = str_len(stash);
+	len2 = str_len(buf);
+	out = malloc(len1 + len2 + 1);
+	if (!out)
+		return (free(stash), NULL);
 	i = 0;
 	while (i < len1)
 	{
-		joined[i] = s1[i];
+		out[i] = stash[i];
 		i++;
 	}
-	i = 0;
-	while (i < len2)
-	{
-		joined[len1 + i] = s2[i];
-		i++;
-	}
-	joined[len1 + len2] = '\0';
-	free(s1);
-	return (joined);
+	j = 0;
+	while (j < len2)
+		out[i++] = buf[j++];
+	out[i] = '\0';
+	return (free(stash), out);
 }

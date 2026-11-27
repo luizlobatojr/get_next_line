@@ -1,77 +1,121 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lubatist <lubatist@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/27 12:01:12 by lubatist          #+#    #+#             */
+/*   Updated: 2026/11/27 12:33:06 by lubatist         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
+static void	*free_stash(char **stash)
+{
+	if (stash && *stash)
+	{
+		free(*stash);
+		*stash = NULL;
+	}
+	return (NULL);
+}
+
+static int	has_newline(const char *s)
+{
+	size_t	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static size_t	line_length(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (s[i] == '\n')
+		i++;
+	return (i);
+}
+
+static char	*extract_line_and_update(char **stash)
+{
+	char	*line;
+	char	*rem;
+	size_t	len;
+	size_t	rem_len;
+
+	if (!stash || !*stash || **stash == '\0')
+		free_stash(stash);
+	len = line_length(*stash);
+	line = dup_substr(*stash, 0, len);
+	if (!line)
+		free_stash(stash);
+	rem_len = 0;
+	while ((*stash)[len + rem_len])
+		rem_len++;
+	rem = NULL;
+	if (rem_len > 0)
+		rem = dup_substr(*stash, len, rem_len);
+	free(*stash);
+	*stash = rem;
+	return (line);
+}
 
 char	*get_next_line(int fd)
 {
-	static char	stash[BUFFER_SIZE];
-	char		buffer[BUFFER_SIZE];
-	ssize_t		nbytes;
-	size_t		b;
+	static char	*stash;
+	char		*buffer;
+	ssize_t		bytes_read;
 
-	nbytes = read(fd, buffer, BUFFER_SIZE);
-	while (nbytes > 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buffer = malloc((size_t)BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	bytes_read = 1;
+	while (!has_newline(stash) && bytes_read > 0)
 	{
-		b = 0;
-		while (buffer[b] != '\n')
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
 		{
-			write(STDOUT, &buffer[b], 1);
-			if (buffer[b] == '\0')
-			{
-				break ;
-			}
-			b++;
+			free(buffer);
+			free(stash);
+			return (stash = NULL);
 		}
-		//if (buffer[i] != '\0' || buffer[i] != '\n')
-		//{
-		nbytes = 0;
-		break ;
-		//}
-		//write(STDOUT, buffer, nbytes);
-		//nbytes = read(fd, buffer, BUFFER_SIZE);
+		buffer[bytes_read] = '\0';
+		stash = join_and_free(stash, buffer);
+		if (!stash)
+			return (free(buffer), NULL);
 	}
-
-
-	//nbytes = read(fd, buffer, BUFFER_SIZE);
-	//printf("[%zd]\n", nbytes);
-	while (nbytes > 0)
-	{
-		/*
-		imprimir o stash e o buffer ate o \n
-
-		new_line = ft_strchr(buffer, '\n');
-		new_len = ft_strlen(new_line);
-
-		write(STDOUT, new_line, new_len);
-
-		stash = buffer depois do \n
-		*/
-
-	//	write(STDOUT, buffer, nbytes);
-	//	nbytes = read(fd, buffer, BUFFER_SIZE);
-		break ;
-	}
-
-	return 0;
+	free(buffer);
+	return (extract_line_and_update(&stash));
 }
+/*int	main(void)
+{
+	int		fd;
+	char	*line;
 
-int main(void)
-{	
-	int fd;
-	char *filename = "texto.txt";
-
-	fd = open(filename, O_RDONLY);
+	fd = open("texto.txt", O_RDONLY);
 	if (fd == -1)
-    {
-		close(fd);
-        perror("Erro ao abrir o ficheiro");
-        return (1);
-    }
-printf("\n--- Linha 1--------------------\n");
-	get_next_line(fd);
-//printf("\n--- Linha 2--------------------\n");
-//	get_next_line(fd);
-printf("\n--- Fim -----------------------\n\n");
-	//
+		return (1);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
 	close(fd);
 	return (0);
-}
+}*/
