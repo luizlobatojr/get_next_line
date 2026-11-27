@@ -6,7 +6,7 @@
 /*   By: lubatist <lubatist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/27 12:00:51 by lubatist          #+#    #+#             */
-/*   Updated: 2026/11/27 14:22:11 by lubatist         ###   ########.fr       */
+/*   Updated: 2026/11/27 19:11:24 by lubatist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*dup_substr(const char *s, size_t start, size_t len)
+char	*ft_substr(const char *s, size_t start, size_t len)
 {
 	char	*out;
 	size_t	i;
