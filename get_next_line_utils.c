@@ -6,13 +6,13 @@
 /*   By: lubatist <lubatist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/27 12:00:51 by lubatist          #+#    #+#             */
-/*   Updated: 2026/11/27 12:23:08 by lubatist         ###   ########.fr       */
+/*   Updated: 2026/11/27 14:22:11 by lubatist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static size_t	str_len(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
@@ -57,28 +57,31 @@ char	*dup_substr(const char *s, size_t start, size_t len)
 	return (out);
 }
 
-char	*join_and_free(char *stash, const char *buf)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*out;
-	size_t	len1;
-	size_t	len2;
+	char	*ret;
 	size_t	i;
 	size_t	j;
 
-	len1 = str_len(stash);
-	len2 = str_len(buf);
-	out = malloc(len1 + len2 + 1);
-	if (!out)
-		return (free(stash), NULL);
-	i = 0;
-	while (i < len1)
+	if (!s1)
 	{
-		out[i] = stash[i];
-		i++;
+		s1 = malloc(1);
+		if (!s1)
+			return (NULL);
+		s1[0] = '\0';
 	}
+	if (!s2)
+		return (free(s1), NULL);
+	ret = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!ret)
+		return (free(s1), NULL);
+	i = -1;
+	while (s1[++i])
+		ret[i] = s1[i];
 	j = 0;
-	while (j < len2)
-		out[i++] = buf[j++];
-	out[i] = '\0';
-	return (free(stash), out);
+	while (s2[j])
+		ret[i++] = s2[j++];
+	ret[i] = '\0';
+	free(s1);
+	return (ret);
 }
