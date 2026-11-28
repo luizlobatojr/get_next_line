@@ -5,14 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lubatist <lubatist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/27 13:25:50 by lubatist          #+#    #+#             */
-/*   Updated: 2026/11/27 19:45:12 by lubatist         ###   ########.fr       */
+/*   Created: 2026/11/28 10:21:17 by lubatist          #+#    #+#             */
+/*   Updated: 2026/11/28 10:23:16 by lubatist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "get_next_line.h"
+#include "get_next_line.h"
+#include <stdio.h>
 
-static char *read_stash(int fd, char *stash)
+char	*read_stash(int fd, char *stash)
 {
 	char	*buffer;
 	int		bytes_read;
@@ -28,7 +29,7 @@ static char *read_stash(int fd, char *stash)
 		{
 			free(stash);
 			free(buffer);
-			return ( NULL);
+			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
 		stash = ft_strjoin(stash, buffer);
@@ -47,31 +48,24 @@ char	*get_next_line(int fd)
 		return (NULL);
 	stash = read_stash(fd, stash);
 	if (!stash || *stash == '\0')
-	{
 		return (free(stash), stash = NULL, NULL);
-	}
 	if (ft_strchr(stash, '\n'))
-	{
 		out = ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1);
-	}
 	else
-	{
 		out = ft_substr(stash, 0, ft_strchr(stash, '\0') - stash);
-	}
 	tmp = stash;
-	printf("temp: %s\n", tmp);
-	if (ft_strch(stash, '\n') && *(ft_strchr(stash, '\n') + 1)
-			stash = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
-				ft_substr(stash, '\0') - ft_strchr(stash, '\n'));
+	if (ft_strchr(stash, '\n') && *(ft_strchr(stash, '\n') + 1))
+		stash = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
+				ft_strchr(stash, '\0') - ft_strchr(stash, '\n'));
 	else
-		stash = NULL
-	free(tmp);
-	return (out);
+		stash = NULL;
+	return (free(tmp), out);
 }
+
 /*
-int	main(void)
+int main(void)
 {
-	int	fd;
+	int fd;
 
 	fd = open("texto.txt", O_RDONLY);
 	get_next_line(fd);
@@ -83,5 +77,5 @@ int	main(void)
 	// get_next_line(fd);
 	// printf("--------------------------------------\n");
 	// get_next_line(fd);
-	close (fd);
+	close(fd);
 }*/
